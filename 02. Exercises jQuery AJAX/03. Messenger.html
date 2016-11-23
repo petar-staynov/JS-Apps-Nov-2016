@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messenger</title>
+    <style>
+        label { display: inline-block; width: 5em; }
+        #author, #content { width: 30em; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div id="main">
+    <textarea id="messages" cols="80" rows="12" disabled="true"></textarea>
+    <div id="controls">
+        <label for="author">Name: </label><input id="author" type="text"><br>
+        <label for="content">Message: </label><input id="content" type="text">
+        <input id="submit" type="button" value="Send">
+        <input id="refresh" type="button" value="Refresh">
+    </div>
+</div>
+<script>
+    attachEvents();
+    
+    function attachEvents() {
+        let host = 'https://messenger-767c4.firebaseio.com/.json';
+
+        $('#submit').on('click', function () {
+            let authorVal = $('#author').val();
+            let messageVal = $('#content').val();
+            let timeStamp = Date.now();
+
+            $.post(host)
+        });
+        $('#refresh').on('click', function () {
+           $.get(host).then(display).catch(error);
+            function display(data) {
+                console.log(data);
+
+                for (let message in data){
+                    console.log(data[message].author);
+
+                    let author = data[message].author;
+                    let content = data[message].content;
+                    let timeStamp = data[message].timestamp;
+
+                    let line = (author + ': ' + content + '\n');
+                    $('#messages').append(line);
+                }
+
+            }
+            function error() {
+                console.log('Error');
+            }
+        });
+    }
+</script>
+</body>
+</html>

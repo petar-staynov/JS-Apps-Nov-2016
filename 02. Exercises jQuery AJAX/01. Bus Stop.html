@@ -17,7 +17,7 @@
 <div id="stopInfo" style="width:20em">
     <div>
         <label for="stopId">Stop ID: </label>
-        <input id="stopId" type="text">
+        <input id="stopId" type="text" value="1308">
         <input id="submit" type="button" value="Check" onclick="getInfo()"></div>
     <div id="result">
         <div id="stopName"></div>
@@ -26,7 +26,29 @@
 </div>
 <script>
     function getInfo() {
-        // TODO ...
+        let baseServiceUrl = 'https://judgetests.firebaseio.com/businfo/';
+
+        let stopIdValue = $('#stopId').val();
+
+        $.get(baseServiceUrl + stopIdValue + '.json')
+                .then(showBusInfo)
+                .catch(showError);
+
+        function showBusInfo(data) {
+            $('#stopName').empty();
+            $('#buses').empty();
+
+            let stopName = data.name;
+            $('#stopName').append(stopName);
+
+            for (let key in data.buses){
+                $('#buses').append(`<li>Bus ${key} arrives in ${data.buses[key]} minutes</li>`)
+            }
+
+        }
+        function showError() {
+            $('#stopName').append('Error');
+        }
     }
 </script>
 </body>
