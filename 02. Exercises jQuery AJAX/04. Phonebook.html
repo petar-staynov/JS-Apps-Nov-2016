@@ -22,7 +22,7 @@ Phone: <input type="text" id="phone" />
         $('#btnLoad').click(loadContacts);
         $('#btnCreate').click(createContact);
 
-        let baseServiceUrl = 'https://phonebook-23a90.firebaseio.com/phonebook';
+        let baseServiceUrl = 'https://phonebook-nakov.firebaseio.com/phonebook';
 
         function loadContacts() {
             $('#phonebook').empty();
@@ -38,8 +38,8 @@ Phone: <input type="text" id="phone" />
             $.post(baseServiceUrl + '.json', newContactJson)
                 .then(loadContacts)
                 .catch(displayError);
-            $('#person').val();
-            $('#phone').val();
+            $('#person').val('');
+            $('#phone').val('');
         }
         function displayError(err) {
             let error = $('<li>Error</li>');
@@ -54,7 +54,10 @@ Phone: <input type="text" id="phone" />
                 $('#phonebook').append(li);
 
                 let deleteBtn = $('<button>Delete</button>');
-                li.append(deleteBtn).click(function () {
+
+
+                li.append(deleteBtn);
+                deleteBtn.on('click', function () {
                     deleteContacts(contact)
                 });
             }
@@ -71,4 +74,4 @@ Phone: <input type="text" id="phone" />
     }
 </script>
 </body>
-</html> 
+</html>
