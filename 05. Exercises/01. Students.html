@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shit</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+        #results {
+            background-color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #results tr {
+            background-color: #AAAAAA;
+            padding: 5vh;
+            font-size: 1.5vw;
+        }
+
+        #results tr:nth-child(odd) {
+            background-color: #808080;
+        }
+
+        #results tr:first-child {
+            background-color: #000000;
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 2vw;
+        }
+
+        #results tr th {
+            padding: 1vw;
+        }
+
+        #results tr td {
+            padding: 1vw;
+            transition: font-size 0.2s;
+        }
+
+        #results tr:not(:first-child):hover {
+            background-color: #F0F8FF;
+            color: #000000;
+            font-size: 2.25vw;
+        }
+
+    </style>
+</head>
+<body>
+ID:
+<input id="studentId" type="number" value="99">
+<br>
+First Name:
+<input id="firstName" type="text" value="Pesho">
+<br>
+Last Name:
+<input id="lastName" type="text"value="Kelesho">
+<br>
+Faculty Number:
+<input id="facultyNumber" type="text" value="99">
+<br>
+Grade:
+<input id="grade" type="number" value=6>
+<br>
+<button id="addBtn">Add Students</button>
+<br>
+<table id="results">
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Faculty Number</th>
+        <th>Grade</th>
+    </tr>
+</table>
+</body>
+<script>
+    attachEvents();
+    function attachEvents() {
+        loadStudents();
+        function loadStudents() {
+            const appKey = 'kid_BJXTsSi-e';
+            const appSecret = '447b8e7046f048039d95610c1b039390';
+            const baseUrl = `https://baas.kinvey.com/appdata/${appKey}/students`;
+            const username = 'guest';
+            const password= 'guest';
+            let authHeaders = {
+                'Authorization': 'Basic ' + btoa(username + ':' + password),
+                'Content-Type': 'application/json'
+            };
+
+            let table = $('#results');
+            $.get({
+                url: baseUrl,
+                headers: authHeaders
+            }).then((students) => {
+                students = students.sort((stud1, stud2) => {
+                    return stud1.ID - stud2.ID;
+                });
+                for (let student of students){
+                    let row = $('<tr>');
+                    let id = $('<td>').text(students.id);
+                    let firstName = $('<td>').text(student.FirstName);
+                    let lastName = $('<td>').text(student.LastName);
+                    let facultyNumber = $('<td>').text(student.FacultyNumber);
+                    let grade = $('<td>').text(student.Grade);
+                    row.append(id).append(firstName).append(lastName).append(facultyNumber).append(grade);
+                    table.append(row);
+                }
+            });
+            $('#addBtn').on('click', function () {
+                let idInput = $('#studentId');
+                let firstName = $('#firstName');
+                let lastName = $('#lastName');
+                let facultyNum = $('#facultyNumber');
+                let grade = $('#grade');
+
+                let facultyRegex = /^\d+$/g;
+
+                if (idInput.val() !== ''
+                    && firstName.val() !== ''
+                    && lastName.val() !== ''
+                    && facultyRegex.test(facultyNum.val())
+                    && grade.val() !== ' ') {
+                    let student = {
+                        ID: Number(idInput.val()),
+                        FirstName: firstName.val(),
+                        LastName: lastName.val(),
+                        FacultyNumber: Number(facultyNum.val()),
+                        Grade: Number(grade.val())
+                    };
+                    $.ajax({
+                        url: baseUrl,
+                        method: 'POST',
+                        headers: authHeaders,
+                        data: JSON.stringify(student)
+                    }).then(loadStudents)
+                }
+                idInput.val('');
+                firstName.val('');
+                lastName.val('');
+                facultyNum.val('');
+                grade.val('');
+            });
+        }
+    }
+</script>
+</html>
