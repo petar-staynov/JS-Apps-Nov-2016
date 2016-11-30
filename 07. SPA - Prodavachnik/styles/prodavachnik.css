@@ -18,13 +18,13 @@ body{
 }
 
 #menu a {
-    display: none;
+    /*display: none;*/
     text-decoration: none;
     padding: 5px 20px;
 }
 
 .menu-item {
-    display: none;
+    /*display: none;*/
     text-decoration: none;
     padding: 5px 20px;
     color: #fff;
@@ -42,7 +42,7 @@ body{
 
 
 main > section {
-    display: none;
+    /*display: none;*/
     padding: 20px 5px;
 }
 
