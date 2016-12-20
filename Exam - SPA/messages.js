@@ -106,10 +106,9 @@ function startApp() {
 
     }
     function showUserMessages() {
-        showView('viewMyMessages');
-
         $('#myMessages tbody').empty();
-
+        showView('viewMyMessages');
+        
         $.ajax({
             method: 'GET',
             url: kinveyBaseUrl + 'appdata/' + kinveyAppKey + '/messages',
@@ -119,6 +118,8 @@ function startApp() {
             .catch(handleAjaxError);
 
         function listUserReceivedMessagesSuccess(messages) {
+            $('#myMessages tbody').empty();
+
             for (let message of messages) {
                 if (message.recipient_username == sessionStorage.getItem('username')){
                     let messageRow = $('<tr>');
@@ -131,8 +132,9 @@ function startApp() {
         }
     }
     function showArchiveSent() {
-        showView('viewArchiveSent');
         $('#sentMessages tbody').empty();
+
+        showView('viewArchiveSent');
 
         $.ajax({
             method: 'GET',
@@ -143,6 +145,7 @@ function startApp() {
             .catch(handleAjaxError);
 
         function listUserSentMessagesSuccess(messages) {
+            $('#sentMessages tbody').empty();
 
             for (let message of messages) {
                 // console.log(message);
